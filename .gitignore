@@ -3,4 +3,6 @@ dist
 .angular
 *.log
 .DS_Store
-src/environments
+# Local environment files with actual API keys
+src/environments/environment.local.ts
+src/environments/environment.prod.local.ts
