@@ -16,7 +16,8 @@ export class AppComponent {
   baseUrl: string = 'https://api.openweathermap.org/data/2.5/weather?q=';
 
   // PLEASE CREATE YOUR OWN KEY. THIS IS ONLY FOR DEMO PURPOSES.
-  key: string = '&appid=5fa988728912c96f18d5abbb35a0a12f';
+  key: string = '&appid=348d1ebc249743e367bb55f3cdbcacf4';
+  
 
   // Map
   mapOptions: MapOptions;
@@ -41,7 +42,7 @@ export class AppComponent {
       center: latLng(38, -97),
       zoom: 6,
       layers: [
-        tileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
           maxZoom: 30,
           attribution: 'Map data © OpenStreetMap contributors',
         }),
@@ -90,7 +91,7 @@ export class AppComponent {
     this.userInteraction = true;
     this.longitude = data.coord.lon;
     this.latitude = data.coord.lat;
-    const marker = new Marker([this.longitude, this.latitude]).setIcon(
+    const marker = new Marker([this.latitude, this.longitude]).setIcon(
       icon({
         iconSize: [25, 41],
         iconAnchor: [13, 41],
@@ -98,13 +99,12 @@ export class AppComponent {
       })
     );
     marker.bindTooltip(this.weatherData.name).openTooltip();
+    marker.addTo(this.map);
   }
 
   onKeyDownEvent(evt: any) {
-    console.log(evt)
     if (evt.code === 'Enter') {
       this.getSingleDay();
-      this.clearData();
     }
   }
 
