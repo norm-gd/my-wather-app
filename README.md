@@ -8,28 +8,24 @@ A simple web application to search for US cities and see their current weather a
 - Display current weather: temperature (Fahrenheit), humidity, and "feels like" temperature
 - Show city location on an interactive OpenStreetMap
 - Error handling for incorrect city names
-
+---
 ## Technology Stack
 
-### Core Framework
-- **Angular 15** - Modern TypeScript-based frontend framework for building single-page applications
 
-### Libraries & Functionality
+### Framework- **Angular 15**
+
+### Libraries 
 
 #### HTTP & Data Management
-- **Angular HttpClientModule** - Handles all API requests to fetch weather data
-- **RxJS 7.6.0** - Reactive programming library for managing asynchronous data streams and observables. Currently used for HTTP subscriptions; can be extended for better error handling, retry logic, and input debouncing
+- **Angular HttpClientModule** 
+- **RxJS 7.6.0** 
 
 #### Mapping & Geolocation
-- **Leaflet 1.9.3** - Lightweight, open-source mapping library that renders interactive maps
-- **ngx-leaflet 15.0.1** - Angular wrapper for Leaflet, providing Angular-friendly directives and components for map integration
-- **OpenStreetMap** - Free, open-source map tiles used as the base layer
+- **Leaflet 1.9.3** 
+- **ngx-leaflet 15.0.1** 
+- **OpenStreetMap** 
 
-#### Styling
-- **SCSS** - CSS preprocessor for writing maintainable, nested stylesheets
-
-### External APIs
-- **OpenWeatherMap API** - Provides real-time weather data (temperature, humidity, feels-like) for any city
+### External API- **OpenWeatherMap API** 
 
 ## Setup & Installation
 
@@ -53,8 +49,6 @@ The app currently has a demo API key included. Before deploying:
 2. Get your own API key
 3. Update the `key` variable in `src/app/app.component.ts`
 
-Never commit API keys to version control. Consider using environment variables for better security.
-
 ## Project Structure
 
 ```
@@ -68,7 +62,7 @@ src/
 └── index.html                # Root HTML
 ```
 
-## Available Scripts
+## NPM Scripts
 
 - `npm start` - Run development server
 - `npm run build` - Build for production
