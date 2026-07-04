@@ -1,6 +1,6 @@
 <main>
-  <div [ngClass]="{ 'centered': fahrenheit === null }" class="search-container">
-    <p class="heading" *ngIf="fahrenheit === null">City Weather & Location</p>
+  <div [ngClass]="{ 'centered': tempKelvin === null }" class="search-container">
+    <p class="heading" *ngIf="tempKelvin === null">City Weather & Location</p>
 
     <div class="input-group">
       <input
@@ -22,7 +22,7 @@
         type="button"
         class="secondary"
         (click)="clearData()"
-        *ngIf="fahrenheit !== null"
+        *ngIf="tempKelvin !== null"
         [disabled]="loading"
       >
         Clear
@@ -49,10 +49,22 @@
     </div>
   </div>
 
-  <div *ngIf="fahrenheit !== null" class="weather-card">
+  <div *ngIf="tempKelvin !== null" class="weather-card">
     <div class="weather-header">
       <h2 class="city-name">{{ displayCityName }}</h2>
-      <p class="temperature">{{ fahrenheit }}°F</p>
+      <div class="unit-toggle">
+        <button
+          type="button"
+          [class.active]="unit === 'F'"
+          (click)="setUnit('F')"
+        >°F</button>
+        <button
+          type="button"
+          [class.active]="unit === 'C'"
+          (click)="setUnit('C')"
+        >°C</button>
+      </div>
+      <p class="temperature">{{ displayTemp }}</p>
     </div>
 
     <div class="weather-details">
@@ -62,7 +74,7 @@
       </div>
       <div class="detail-item">
         <span class="detail-label">Feels Like</span>
-        <span class="detail-value">{{ feelsLike }}°F</span>
+        <span class="detail-value">{{ displayFeelsLike }}</span>
       </div>
     </div>
   </div>
@@ -72,7 +84,7 @@
     leaflet
     (leafletMapReady)="onMapReady($event)"
     [leafletOptions]="mapOptions"
-    *ngIf="fahrenheit !== null"
+    *ngIf="tempKelvin !== null"
   ></div>
 
   <div class="error-message" [ngClass]="{ 'show-error': error }">
