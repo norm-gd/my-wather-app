@@ -6,6 +6,7 @@ import { GeoResult } from './models/geocode.model';
 import { GeocodeService } from './services/geocode.service';
 import { WeatherService } from './services/weather.service';
 import { HttpErrorResponse } from '@angular/common/http';
+import { TemperatureUnit, formatTemp } from './utils/temperature.util';
 
 @Component({
   selector: 'my-app',
@@ -13,9 +14,10 @@ import { HttpErrorResponse } from '@angular/common/http';
   styleUrls: ['./app.component.scss'],
 })
 export class AppComponent implements OnInit, OnDestroy {
-  fahrenheit: number | null = null;
-  feelsLike: number | null = null;
+  tempKelvin: number | null = null;
+  feelsLikeKelvin: number | null = null;
   humidity: number | null = null;
+  unit: TemperatureUnit = 'F';
   cityNameValue: string = '';
   displayCityName: string = '';
   error: boolean = false;
@@ -159,9 +161,9 @@ export class AppComponent implements OnInit, OnDestroy {
       return;
     }
 
-    this.fahrenheit = this.toFahrenheit(weatherData.main.temp);
+    this.tempKelvin = weatherData.main.temp;
     this.humidity = weatherData.main.humidity;
-    this.feelsLike = this.toFahrenheit(weatherData.main.feels_like);
+    this.feelsLikeKelvin = weatherData.main.feels_like;
     this.displayCityName = weatherData.name;
     this.latitude = weatherData.coord.lat;
     this.longitude = weatherData.coord.lon;
@@ -208,8 +210,16 @@ export class AppComponent implements OnInit, OnDestroy {
     this.map.panTo(latLng(lat, lon));
   }
 
-  private toFahrenheit(kelvin: number): number {
-    return Math.ceil(((kelvin - 273.15) * 9) / 5 + 32);
+  get displayTemp(): string {
+    return this.tempKelvin !== null ? formatTemp(this.tempKelvin, this.unit) : '';
+  }
+
+  get displayFeelsLike(): string {
+    return this.feelsLikeKelvin !== null ? formatTemp(this.feelsLikeKelvin, this.unit) : '';
+  }
+
+  setUnit(unit: TemperatureUnit): void {
+    this.unit = unit;
   }
 
   private handleError(err?: HttpErrorResponse): void {
@@ -241,13 +251,14 @@ export class AppComponent implements OnInit, OnDestroy {
   }
 
   clearData(): void {
-    this.fahrenheit = null;
-    this.feelsLike = null;
+    this.tempKelvin = null;
+    this.feelsLikeKelvin = null;
     this.humidity = null;
     this.displayCityName = '';
     this.latitude = null;
     this.longitude = null;
     this.geoResults = [];
+    this.unit = 'F';
 
     if (this.cityName) {
       this.cityName.nativeElement.value = '';
