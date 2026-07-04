@@ -1,38 +1,11 @@
-import { HttpClient, HttpParams, HttpErrorResponse } from '@angular/common/http';
 import { Component, ElementRef, ViewChild, OnInit, OnDestroy } from '@angular/core';
 import { icon, latLng, Map, MapOptions, Marker, tileLayer } from 'leaflet';
 import { catchError, of, Subject, switchMap, takeUntil } from 'rxjs';
-import { environment } from '../environments/environment';
-
-interface WeatherMain {
-  temp: number;
-  humidity: number;
-  feels_like: number;
-}
-
-interface WeatherSys {
-  country: string;
-}
-
-interface WeatherCoord {
-  lon: number;
-  lat: number;
-}
-
-interface WeatherData {
-  name: string;
-  main: WeatherMain;
-  sys: WeatherSys;
-  coord: WeatherCoord;
-}
-
-interface GeoResult {
-  name: string;
-  lat: number;
-  lon: number;
-  country: string;
-  state?: string;
-}
+import { WeatherData } from './models/weather.model';
+import { GeoResult } from './models/geocode.model';
+import { GeocodeService } from './services/geocode.service';
+import { WeatherService } from './services/weather.service';
+import { HttpErrorResponse } from '@angular/common/http';
 
 @Component({
   selector: 'my-app',
@@ -64,7 +37,10 @@ export class AppComponent implements OnInit, OnDestroy {
 
   @ViewChild('cityName', { static: false }) cityName!: ElementRef;
 
-  constructor(private http: HttpClient) {}
+  constructor(
+    private geocodeService: GeocodeService,
+    private weatherService: WeatherService
+  ) {}
 
   ngOnInit(): void {
     this.initializeMapOptions();
@@ -151,23 +127,13 @@ export class AppComponent implements OnInit, OnDestroy {
   }
 
   private geocode(city: string) {
-    const params = new HttpParams()
-      .set('q', city)
-      .set('limit', '5')
-      .set('appid', environment.openWeatherApiKey);
-
-    return this.http.get<GeoResult[]>(environment.openWeatherGeoUrl, { params });
+    return this.geocodeService.geocode(city);
   }
 
   private fetchWeatherByCoords(geo: GeoResult): void {
     this.loading = true;
-    const params = new HttpParams()
-      .set('lat', geo.lat.toString())
-      .set('lon', geo.lon.toString())
-      .set('appid', environment.openWeatherApiKey);
-
-    this.http
-      .get<WeatherData>(environment.openWeatherBaseUrl, { params })
+    this.weatherService
+      .getWeatherByCoords(geo)
       .pipe(
         takeUntil(this.destroy$),
         catchError((err) => {
